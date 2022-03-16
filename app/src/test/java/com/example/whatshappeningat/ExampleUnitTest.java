@@ -1,4 +1,4 @@
-package com.example.what_shappeningat;
+package com.example.whatshappeningat;
 
 import org.junit.Test;
 
