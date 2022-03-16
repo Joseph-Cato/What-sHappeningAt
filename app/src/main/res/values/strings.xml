@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">What\'s Happening At</string>
+    <string name="please_enter_a_country_and_press_submit">Please enter a country and press submit!</string>
+    <string name="country">Country</string>
+    <string name="submit">Submit</string>
+    <string name="error">Error!</string>
+    <string name="error_getting_date">Error getting Date</string>
+    <string name="error_getting_temp">Error getting Temp</string>
+    <string name="error_getting_description">Error getting description</string>
 </resources>
