@@ -20,7 +20,7 @@ public class API {
 
     private static final String TAG = "API";
 
-    private static final String OPENWEATHERMAP_API_KEY = "eec9b50914cd3087c322220c797710b0";
+    private static final String OPENWEATHERMAP_API_KEY = "d8965512f55e3a250abe4a05eede8f58";
     private static final String NEWS_API = "hi";
 
     /*
@@ -66,21 +66,27 @@ public class API {
     private static URL buildGeocodingURL(String cityName) throws MalformedURLException {
         String string = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName +
                 "&limit=1&appid=" + OPENWEATHERMAP_API_KEY;
+        Log.d(TAG, "URL: " + string);
         return new URL(string);
     }
 
     private static double[] parseGeoResponse(String response) throws JSONException {
+        //Log.d(TAG, "parseGeoResponse running...");
         JSONArray jsonArray = new JSONArray(response);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-        return new double[] {jsonObject.getInt("lat"), jsonObject.getInt("lon")};
+        return new double[] {jsonObject.getDouble("lat"), jsonObject.getDouble("lon")};
     }
 
     public static double[] getCoords(String cityName) throws APIException {
         try {
+            Log.d(TAG, "getCoords() building url...");
             URL url = buildGeocodingURL(cityName);
+            Log.d(TAG, "getCoords() getting api response...");
             String response = getAPIResponse(url);
-            return parseGeoResponse(response);
+            Log.d(TAG, "getCoords() parsing api response...");
+            double[] coords = parseGeoResponse(response);
+            Log.d(TAG, "getCoords() -> {" + coords[0] + ", " + coords[1] + "}");
+            return coords;
         } catch (Exception e) {
             Log.e(TAG, "geoCoding api error:\n" + e.toString());
             throw new APIException(e.getMessage(), e.getCause());
@@ -124,9 +130,18 @@ public class API {
 
     public static ArrayList<String[]> getWeather(double[] coords) throws APIException {
         try {
+            Log.d(TAG, "getWeather() building url...");
             URL url = buildWeatherURL(coords);
+
+            Log.d(TAG, "getWeather() getting response...");
             String response = getAPIResponse(url);
-            return parseWeatherResponse(response);
+
+            Log.d(TAG, "getWeather() parsing response...");
+            ArrayList<String[]> weather = parseWeatherResponse(response);
+
+            Log.d(TAG, "getWEather() returning results...");
+            return weather;
+
         } catch (Exception e) {
             Log.e(TAG, "weather api error:\n" + e.toString());
             throw new APIException(e.getMessage(), e.getCause());

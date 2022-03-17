@@ -46,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         // starts ViewerActivity with intent containing entered country name, does nothing if no country has been entered
 
         String countryString = countryEditText.getText().toString();
+        Log.d(TAG, "countryString: " + countryString);
 
-        if (Objects.equals(countryString, "Country")) {
+        if (countryString.equals("Country")) {
             Toast.makeText(getApplicationContext(), "Please enter a country", Toast.LENGTH_SHORT).show();
             return;
         }
