@@ -25,11 +25,13 @@
         android:layout_marginTop="43dp"
         android:layout_marginEnd="103dp"
         android:layout_marginBottom="54dp"
+        android:autofillHints="@string/country"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/country"
+        android:text=""
         app:layout_constraintBottom_toTopOf="@+id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeText" />
 
@@ -40,7 +42,6 @@
         android:layout_marginStart="158dp"
         android:layout_marginTop="54dp"
         android:layout_marginEnd="159dp"
-        android:layout_marginBottom="480dp"
         android:text="@string/submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
