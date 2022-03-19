@@ -21,7 +21,7 @@ public class API {
     private static final String TAG = "API";
 
     private static final String OPENWEATHERMAP_API_KEY = "d8965512f55e3a250abe4a05eede8f58";
-    private static final String NEWS_API = "hi";
+    private static final String NEWS_API = "pub_5541b0b5040a57d9f1c3f7da5a8bafebd7c3";
 
     /*
     -------------------- General API Functions --------------------
@@ -55,8 +55,6 @@ public class API {
         }
     }
 
-
-
     /*
     -------------------- Location API Functions --------------------
      */
@@ -71,10 +69,17 @@ public class API {
     }
 
     private static double[] parseGeoResponse(String response) throws JSONException {
-        //Log.d(TAG, "parseGeoResponse running...");
+        Log.d(TAG, "parseGeoResponse running...");
         JSONArray jsonArray = new JSONArray(response);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
         return new double[] {jsonObject.getDouble("lat"), jsonObject.getDouble("lon")};
+    }
+
+    private static String parseGeoResponseCountryCode(String response) throws JSONException {
+        Log.d(TAG, "parseGeoResponseCountryCode running...");
+        JSONArray jsonArray = new JSONArray(response);
+        JSONObject jsonObject = jsonArray.getJSONObject(0);
+        return jsonObject.getString("country");
     }
 
     public static double[] getCoords(String cityName) throws APIException {
@@ -87,6 +92,21 @@ public class API {
             double[] coords = parseGeoResponse(response);
             Log.d(TAG, "getCoords() -> {" + coords[0] + ", " + coords[1] + "}");
             return coords;
+        } catch (Exception e) {
+            Log.e(TAG, "geoCoding api error:\n" + e.toString());
+            throw new APIException(e.getMessage(), e.getCause());
+        }
+    }
+
+    public static String getCountryCode(String cityName) throws APIException {
+        try {
+            Log.d(TAG, "getCountryCode() building url...");
+            URL url = buildGeocodingURL(cityName);
+            Log.d(TAG, "getCountryCode() getting api response...");
+            String response = getAPIResponse(url);
+            Log.d(TAG, "getCountryCode() parsing api response...");
+            String result = parseGeoResponseCountryCode(response);
+            return result;
         } catch (Exception e) {
             Log.e(TAG, "geoCoding api error:\n" + e.toString());
             throw new APIException(e.getMessage(), e.getCause());
@@ -153,4 +173,53 @@ public class API {
     -------------------- News API Functions --------------------
      */
 
+    private static URL buildNewsURl(String countryCode) throws MalformedURLException {
+        String string = "https://newsdata.io/api/1/news?apikey=" + NEWS_API +
+                "&country=" + countryCode;
+        return new URL(string);
+    }
+
+    private  static ArrayList<String[]> parseNewsResponse(String response) throws JSONException {
+        ArrayList<String[]> arrayList = new ArrayList<>();
+
+        int articleLimit;
+        JSONObject article;
+
+        JSONObject jsonObject = new JSONObject(response);
+        JSONArray jsonArray = jsonObject.getJSONArray("results");
+
+        if (jsonObject.getInt("totalResults") > 50) {
+            articleLimit = 50;
+        } else {
+            articleLimit = jsonArray.length();
+        }
+
+        for (int i = 0; i < 10; i++){
+            article = jsonArray.getJSONObject(i);
+
+            arrayList.add( new String[]{article.getString("title"), article.getString("description"), article.getString("link")} );
+        }
+
+        return arrayList;
+    }
+
+    public static ArrayList<String[]> getNews(String country) throws APIException {
+        try {
+            Log.d(TAG, "getNews() building url...");
+            URL url = buildNewsURl(getCountryCode(country));
+
+            Log.d(TAG, "getNews() getting api response...");
+            String response = getAPIResponse(url);
+
+            Log.d(TAG, "getNews() parsing api response...");
+            ArrayList<String[]> result = parseNewsResponse(response);
+
+            Log.d(TAG, "getNews() finished");
+            return result;
+
+        } catch (Exception e) {
+            Log.e(TAG, "news api error:\n" + e.toString());
+            throw new APIException(e.getMessage(), e.getCause());
+        }
+    }
 }

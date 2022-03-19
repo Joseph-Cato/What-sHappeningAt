@@ -59,4 +59,16 @@ public class APITest {
             Assert.fail();
         }
     }
+
+    @Test
+    public void newsTest() {
+        String city = "England";
+
+        try {
+            ArrayList<String[]> news = API.getNews(city);
+        } catch (APIException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
 }
