@@ -136,9 +136,19 @@ public class API {
             JSONObject temp = day.getJSONObject("temp");
             JSONObject desc = day.getJSONArray("weather").getJSONObject(0);
 
+            String tempValue;
+            //TODO -
+            if (false) {
+                // Fahrenheit
+                tempValue = String.valueOf( kelvinToF(temp.getDouble("day")) );
+            } else {
+                // Celsius
+                tempValue = String.valueOf( kelvinToC(temp.getDouble("day")) ) + '\u00B0' + 'C';
+            }
+
             String[] info = {
-                    String.valueOf(day.getInt("dt")),
-                    String.valueOf(temp.getDouble("day")),
+                    unixTimeToDate( day.getInt("dt") ),
+                    tempValue,
                     desc.getString("description")
             };
 
@@ -167,6 +177,20 @@ public class API {
             throw new APIException(e.getMessage(), e.getCause());
         }
     }
+
+    private static int kelvinToC(double k) {
+        return (int) k - 273;
+    }
+
+    private static int kelvinToF(double k) {
+        return (int) (kelvinToC(k)*(9/5)+32);
+    }
+
+    private static String unixTimeToDate(long unixTime) {
+        java.util.Date time = new java.util.Date( unixTime*1000 );
+        return time.toString();
+    }
+
 
 
     /*
