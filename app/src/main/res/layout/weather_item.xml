@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16sp"
+    android:paddingVertical="6sp">
 
     <TextView
         android:id="@+id/textViewDate"
@@ -10,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/error_getting_date"
         android:textColor="@color/black"
-        android:textSize="20sp"/>
+        android:textSize="16sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/error_getting_temp"
-            android:textSize="17sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/textViewDescription"
@@ -31,6 +33,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/error_getting_description"
-            android:textSize="17sp"/>
+            android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

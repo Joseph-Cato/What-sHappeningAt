@@ -28,8 +28,8 @@ public class ViewerActivity extends AppCompatActivity {
     private static volatile double[] coords;
     private static volatile Boolean gotWeatherInfo = false;
     private static volatile Boolean gotNewsInfo = false;
-    private static volatile ArrayList<String[]> weatherInfo;
-    private static volatile ArrayList<String[]> newsInfo;
+    private static volatile ArrayList<String[]> weatherInfo = new ArrayList<>();
+    private static volatile ArrayList<String[]> newsInfo = new ArrayList<>();
 
 
     private class GeoLocationAsyncTask extends AsyncTask<String, Integer, double[]> {
@@ -52,6 +52,12 @@ public class ViewerActivity extends AppCompatActivity {
             super.onPostExecute(doubles);
             Log.d(TAG, "(geo) onPostExecute running...");
 
+            // Get weather data and update view
+            WeatherAsyncTask weatherTask = new WeatherAsyncTask();
+            weatherTask.execute(coords);
+
+            NewsAsyncTask newsTask = new NewsAsyncTask();
+            newsTask.execute(cityName);
 
         }
     }
@@ -79,7 +85,7 @@ public class ViewerActivity extends AppCompatActivity {
             super.onPostExecute(strings);
             Log.d(TAG, "(weather) onPostExecute running...");
             weatherInfo = strings;
-            gotWeatherInfo = true;
+            initWeatherRecyclerView(weatherInfo);
 
         }
     }
@@ -117,6 +123,8 @@ public class ViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_viewer);
         Intent intent = getIntent();
 
+        weatherInfo.add(new String[]{"Loading", "Loading", "Loading"});
+        newsInfo.add(new String[]{"Loading", "Loading", "Loading"});
 
         //Location
 
@@ -125,19 +133,18 @@ public class ViewerActivity extends AppCompatActivity {
         cityNameTextView = findViewById(R.id.cityName);
         cityNameTextView.setText( cityName );
 
+        // Set up recycler Views
+        initWeatherRecyclerView(weatherInfo);
+        initNewsRecyclerView(newsInfo);
+
+        // Geo Async Task will get info for all views and update recycler views
         GeoLocationAsyncTask geoTask = new GeoLocationAsyncTask();
         geoTask.execute(cityName);
 
-        // Weather
-        WeatherAsyncTask weatherTask = new WeatherAsyncTask();
-        weatherTask.execute(coords);
 
-        while (!gotWeatherInfo) {
-            // do nothing
-        }
 
-        initWeatherRecyclerView(weatherInfo);
 
+/*
         // News
         NewsAsyncTask newTask = new NewsAsyncTask();
         try {
@@ -146,6 +153,8 @@ public class ViewerActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+ */
 
     }
 
