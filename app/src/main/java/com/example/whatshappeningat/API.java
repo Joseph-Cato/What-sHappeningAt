@@ -140,7 +140,7 @@ public class API {
             //TODO -
             if (false) {
                 // Fahrenheit
-                tempValue = String.valueOf( kelvinToF(temp.getDouble("day")) );
+                tempValue = String.valueOf( kelvinToF(temp.getDouble("day")) ) + '\u00B0' + 'F';
             } else {
                 // Celsius
                 tempValue = String.valueOf( kelvinToC(temp.getDouble("day")) ) + '\u00B0' + 'C';
